@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-
+import { ClerkProvider, SignIn, UserButton } from "@clerk/nextjs";
+import Navbar from "@/components/nav";
+import ThemeContextProvider from "@/providers/theme-provider";
+import { Suspense } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -15,8 +18,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={inter.className}>
+        <ThemeContextProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Suspense fallback={<div>Loading......................</div>}>
+          <Navbar />
+
+            </Suspense>
+          {children}
+          </ThemeContextProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
