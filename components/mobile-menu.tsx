@@ -39,6 +39,7 @@ import { Dialog } from "@headlessui/react";
 import IconButton from "./ui/icon-button";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function MobileMenu() {
     const pathname = usePathname();
@@ -73,7 +74,7 @@ export default function MobileMenu() {
         </div>
         <ThemeSwitch />
         <div className="mr-1 flex  h-full max-h-[60vh] flex-col-reverse items-end justify-start p-6 sm:mr-3">
-        <h2>Mis publicaciones</h2>
+        <Link href="/mis_publicaciones">Mis publicaciones</Link>
         </div>
         <SignOutButton />
         </Dialog.Panel>

@@ -1,3 +1,4 @@
+"use server"
 import db from "@/lib/prismadb";
 
 type FormData = {
@@ -10,6 +11,7 @@ type FormData = {
 }
 
 export async function createPost(formData: FormData) {
+
     const {userId, name, imageUrl, petType, age, lost} = formData
     try {
         const pet = await db.pet.create({
@@ -22,6 +24,7 @@ export async function createPost(formData: FormData) {
                 lost,
             }
         })
+        return { pet }
     } catch (error) {
         
     }

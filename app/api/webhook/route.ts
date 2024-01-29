@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
       await db.user.create({
         data: {
-          user_id: request.data.id,
+          userId: request.data.id,
           first_name: request.data.first_name,
           last_name: request.data.last_name,
           image: request.data.image_url,
