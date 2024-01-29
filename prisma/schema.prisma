@@ -11,24 +11,26 @@ datasource db {
 }
 
 model User {
-  id    String  @id @default(cuid())
-  userId String
-  first_name  String
-  last_name String?
-  email String @unique
-  image String?
-  venue Json?
-  pets  Pet[]
+  id         String  @id @default(cuid())
+  userId     String  @unique
+  first_name String
+  last_name  String?
+  email      String  @unique
+  image      String?
+  pets       Pet[]
 }
 
 model Pet {
-  id       String  @id @default(uuid())
-  name     String
-  imageUrl String
-  age      String
-  petType  String
-  archived Boolean? @default(false)
-  lost     Boolean? @default(false)
+  id          String   @id @default(uuid())
+  name        String
+  imagesUrls  Json[]
+  age         String
+  petType     String
+  archived    Boolean? @default(false)
+  lost        Boolean? @default(false)
+  city        String
+  state       String
+  description String
 
   userId String
   user   User   @relation(fields: [userId], references: [id])

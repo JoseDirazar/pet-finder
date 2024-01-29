@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,52 +25,76 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { createPost } from "@/actions/createPost";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImageUpload from "@/components/ui/image-upload";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
-  userId: z.string().min(2).max(50),
   name: z.string().min(2).max(50),
-  imageUrl: z.object({ url: z.string() }).array(),
+  imagesUrls: z.object({ url: z.string() }).array(),
   age: z.string().min(2).max(50),
   petType: z.string().min(2).max(50),
   lost: z.string().min(2).max(50),
+  location: z.object({ city: z.string(), state: z.string() }),
+  description: z.string().min(10).max(250),
 });
 
-export default function Page({ params }: { params: { userId: string } }) {
+export default function Page() {
   const [loading, setLoading] = useState(false);
+  const [location, setLocation] = useState({ city: "", state: "" });
 
   const age = ["Cachorro", "Grande", "adulto"];
   const petType = ["Perro", "Gato"];
-  const lost = ["perdido", "adopcion"]
+  const lost = ["perdido", "adopcion"];
+
+  useEffect(() => {
+    window.navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        (async function () {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${coords.latitude}&lon=${coords.longitude}&format=json`
+          );
+          const data = await response.json();
+          setLocation({ city: data.address.town, state: data.address.state });
+        })();
+      },
+      (error) => console.log(error)
+    );
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userId: params.userId,
       name: "",
-      imageUrl: [],
+      imagesUrls: [],
       age: "",
       petType: "",
       lost: "",
+      location,
+      description: "",
     },
   });
-  console.log("PARAMS:: ", params);
-  console.log("FORM_VALUES:: ", form.getValues());
+
+  //console.log("PARAMS:: ", params);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-  
     try {
       setLoading(true);
-    
+      values.location = location;
+      console.log(values);
+      console.log("Submit Values:: ", values);
+      await axios.post("/api/posts", values);
     } catch (error) {
-      
+      console.log(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-    console.log(values);
   }
   return (
     <Form {...form}>
+      <FormLabel>
+        soy de {location.city}, {location.state}
+      </FormLabel>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -153,7 +178,7 @@ export default function Page({ params }: { params: { userId: string } }) {
         />
         <FormField
           control={form.control}
-          name="imageUrl"
+          name="imagesUrls"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Images</FormLabel>
@@ -173,12 +198,12 @@ export default function Page({ params }: { params: { userId: string } }) {
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           control={form.control}
           name="lost"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Que animal es</FormLabel>
+              <FormLabel>Motivo</FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -194,14 +219,29 @@ export default function Page({ params }: { params: { userId: string } }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                {lost.map((situation, index) => (
+                  {lost.map((situation, index) => (
                     <SelectItem key={index} value={situation}>
                       {situation}
                     </SelectItem>
                   ))}
-            
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder="shadcn" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
