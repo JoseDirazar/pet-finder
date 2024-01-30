@@ -33,9 +33,8 @@ const variantsLi = {
   },
 };
 
-export const Navigation = () => {
+export const Navigation = ({ toggle }: { toggle: () => void }) => {
     const { userId } = useAuth()
-    console.log(userId)
   return (
     <motion.ul className={cn("m-0 p-0", styles.ul)} variants={variants}>
       <motion.li
@@ -73,9 +72,9 @@ export const Navigation = () => {
           >
             <Github />
           </div>
-          <div className={cn("flex items-center", styles.textPlaceholder)}>
+          <button onClick={toggle} className={cn("flex items-center", styles.textPlaceholder)}>
             Mis publicaciones
-          </div>
+          </button>
         </Link>
       </motion.li>
       {itemIds.map((i) => (

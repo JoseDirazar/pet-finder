@@ -5,6 +5,8 @@ import { ClerkProvider, SignIn, UserButton } from "@clerk/nextjs";
 import Navbar from "@/components/nav";
 import ThemeContextProvider from "@/providers/theme-provider";
 import { Suspense } from "react";
+import Location from "@/components/location";
+import { ToastProvider } from "@/providers/toast-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,18 +23,19 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
-        <ThemeContextProvider
+          <Location />
+          <ThemeContextProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
             <Suspense fallback={<div>Loading......................</div>}>
-          <Navbar />
-
+              <Navbar />
             </Suspense>
-          {children}
+            {children}
           </ThemeContextProvider>
+          <ToastProvider />
         </body>
       </html>
     </ClerkProvider>

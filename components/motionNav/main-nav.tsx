@@ -28,7 +28,7 @@ const sidebar = {
 };
 
 export const Example = () => {
-    const {userId} = useAuth()
+
   const [isOpen, toggleOpen] = useCycle(false, true);
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
@@ -42,7 +42,7 @@ export const Example = () => {
       className={styles.nav}
     >
       <motion.div className={styles.background} variants={sidebar} />
-      <Navigation />
+      <Navigation toggle={() => toggleOpen()} />
       <MenuToggle toggle={() => toggleOpen()} />
     </motion.nav>
   );

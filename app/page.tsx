@@ -1,48 +1,35 @@
 import Location from "@/components/location";
 import { Card, CardContent } from "@/components/ui/card";
+import PetCard from "@/components/ui/pet-card";
 import db from "@/lib/prismadb";
 import { currentUser } from "@clerk/nextjs";
-import Image from "next/image";
+import { PostType } from "@/components/ui/pet-card";
 
 export default async function Home({
   searchParams,
 }: {
   searchParams: { city: string; state: string };
 }) {
+  console.log(searchParams)
   const currentUsers = await currentUser();
   const localPosts = await db.pet.findMany({
     where: {
       city: searchParams.city,
     },
-  });
+  }) as PostType[];
+  if(!searchParams?.city) return null
   return (
     <main className="flex min-h-screen flex-col items-center p-8 gap-y-2">
       <div>Hola {currentUsers?.firstName}. Estas son las publicaciones de {searchParams.city}</div>
       <div>
         
         <div className="flex flex-col p-8">
-          {localPosts.map((post: any) => (
-            <Card
-              className="flex  max-w-[250px] rounded-t-xl h-[250px] flex-col items-center"
-              key={post.id}
-            >
-              <Image
-                src={post?.imagesUrls[0].url as string}
-                alt={post.name}
-                width={250}
-                height={250}
-                className="bg-cover overflow-hidden rounded-t-xl"
-              />
-              <CardContent className="w-full">
-              <h2>{post.name}</h2>
-              <p>{post.description}</p>
-
-              </CardContent>
-            </Card>
+          {localPosts.map((post) => (
+            <PetCard data={post} key={post.id}/>
           ))}
         </div>
       </div>
-      <Location />
+    
     </main>
   );
 }
