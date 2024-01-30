@@ -41,6 +41,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { currentUser, auth } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 
 export default function MobileMenu() {
   const pathname = usePathname();
@@ -64,7 +65,11 @@ export default function MobileMenu() {
       >
         <div className="fixed inset-0 bg-black/10 backdrop-blur-[2px]" />
 
-        <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto py-4 pb-6 shadow-xl backdrop-blur-lg  transition-transform animate-in bg-secondary/70 ">
+        <motion.div
+          initial={{x: 100}}
+          animate={{ x: 0 , opacity: 1,}}
+          className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto py-4 pb-6 shadow-xl backdrop-blur-lg  transition-transform animate-in bg-secondary/70 "
+        >
           {/* Close button */}
           <div className="flex items-center px-[1.1rem]  justify-end">
             <IconButton
@@ -82,7 +87,7 @@ export default function MobileMenu() {
             <Link href="/mis_publicaciones">Mis publicaciones</Link>
           </div>
           <SignOutButton />
-        </Dialog.Panel>
+        </motion.div>
       </Dialog>
     </>
   );
