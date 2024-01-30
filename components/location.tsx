@@ -32,8 +32,7 @@ export default function Location() {
   //console.log(location)
   //console.log(city)
   return (
-    <div>
-      {location.city}, {location.state}
-    </div>
+    <>
+    </>
   );
 }

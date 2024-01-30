@@ -21,7 +21,7 @@ const variants = {
 
 const colors = ["#FF008C", "#D309E1", "#9C1AFF", "#7700FF", "#4400FF"];
 
-export const MenuItem = ({ i }) => {
+export const MenuItem = ({ i }: { i: number }) => {
   const style = { border: `2px solid ${colors[i]}` };
   return (
     <motion.li

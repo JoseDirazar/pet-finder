@@ -4,6 +4,7 @@ import { motion, sync, useCycle } from "framer-motion";
 import { useDimensions } from "./useDimentions";
 import { MenuToggle } from "./menu-toggle";
 import { Navigation } from "./navigation";
+import { useAuth } from "@clerk/nextjs";
 import styles from './nav.module.css'
 
 const sidebar = {
@@ -27,6 +28,7 @@ const sidebar = {
 };
 
 export const Example = () => {
+    const {userId} = useAuth()
   const [isOpen, toggleOpen] = useCycle(false, true);
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
