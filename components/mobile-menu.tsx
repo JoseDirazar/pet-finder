@@ -34,14 +34,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ThemeSwitch from "./ui/theme-switch";
-import { SignOutButton, UserButton } from "@clerk/nextjs";
+
 import { Dialog } from "@headlessui/react";
 import IconButton from "./ui/icon-button";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-import { currentUser, auth } from "@clerk/nextjs";
+
 import { motion } from "framer-motion";
+//import SignOut from "./signout-button";
 
 export default function MobileMenu() {
   const pathname = usePathname();
@@ -80,13 +81,13 @@ export default function MobileMenu() {
           </div>
           <div className="flex items-center px-4 py-8 justify-between">
             <h2>Mi cuenta</h2>
-            <UserButton />
+            
           </div>
           <ThemeSwitch />
           <div className="mr-1 flex  h-full max-h-[60vh] flex-col-reverse items-end justify-start p-6 sm:mr-3">
             <Link href="/mis_publicaciones">Mis publicaciones</Link>
           </div>
-          <SignOutButton />
+          
         </motion.div>
       </Dialog>
     </>

@@ -1,12 +1,23 @@
-import { authMiddleware } from "@clerk/nextjs";
- 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({
-    publicRoutes: ["/", "/api/webhook"]
-});
- 
+import NextAuth from "next-auth"
+
+import authConfig from "./auth.config"
+import { DEFAULT_LOGIN_REDIRECT, authRoutes } from "./middleware-routes"
+
+const { auth } = NextAuth(authConfig)
+
+export default auth((req) => {
+const { nextUrl } = req
+console.log('NEXTURL:: ',nextUrl)
+const isLoggedIn = !!req.auth
+
+const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+
+  if(isLoggedIn && isAuthRoute) {
+    return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
+  }
+})
+
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+    matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  }

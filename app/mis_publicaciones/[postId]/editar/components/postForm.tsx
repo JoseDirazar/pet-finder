@@ -84,7 +84,7 @@ export default function PetEditForm({ initialData }: {initialData: PostType}) {
   //console.log("PARAMS:: ", params);
   
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Entreeeeeeeeeeeeeeeeeee", values);
+    //console.log("Entreeeeeeeeeeeeeeeeeee", values);
     try {
       setLoading(true);
       
@@ -93,7 +93,7 @@ export default function PetEditForm({ initialData }: {initialData: PostType}) {
         ...values,
         petId: initialData.id,
       }); //crear endpoint
-      console.log(response.status);
+      //console.log(response.status);
       if (response.status === 200) {
         toast.success("Se actualizo la publicacion");
       }

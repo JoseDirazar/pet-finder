@@ -3,10 +3,14 @@ import { motion } from "framer-motion";
 import { MenuItem } from "./menu-item";
 import styles from "./nav.module.css";
 import { cn } from "@/lib/utils";
-import { SignIn, SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
+
 import { Github } from "lucide-react";
 import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
+import { auth } from "@/auth";
+import ThemeSwitch from "../ui/theme-switch";
+import type { Session } from "next-auth";
+import Image from "next/image";
+import SignOut from "../signout-button";
 const variants = {
   open: {
     transition: { staggerChildren: 0.07, delayChildren: 0.2 },
@@ -33,8 +37,8 @@ const variantsLi = {
   },
 };
 
-export const Navigation = ({ toggle }: { toggle: () => void }) => {
-    const { userId } = useAuth()
+export const Navigation = ({ toggle, session }: { toggle: () => void, session: Session | null }) => {
+    //const { userId } = await auth()
   return (
     <motion.ul className={cn("m-0 p-0", styles.ul)} variants={variants}>
       <motion.li
@@ -49,11 +53,11 @@ export const Navigation = ({ toggle }: { toggle: () => void }) => {
             styles.iconPlaceholder
           )}
         >
-          {userId && <UserButton />}
+          {session?.user?.image && <Image src={session.user.image} alt='user-logo' width={60} height={60} />}
         </div>
         <div className={cn("flex items-center", styles.textPlaceholder)}>
           {
-            userId ? ('My profile') : <SignInButton />
+            session?.user ? ('My profile') : <Link href='/login'>Log In</Link>
           }
         </div>
       </motion.li>
@@ -86,7 +90,8 @@ export const Navigation = ({ toggle }: { toggle: () => void }) => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >
-      {userId && <SignOutButton />}
+      {/* {session?.user && <SignOut />} */}
+      <ThemeSwitch />
       </motion.li>
     </motion.ul>
   );

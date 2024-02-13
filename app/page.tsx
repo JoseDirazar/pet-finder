@@ -2,7 +2,7 @@ import Location from "@/components/location";
 import { Card, CardContent } from "@/components/ui/card";
 import PetCard from "@/components/ui/pet-card";
 import db from "@/lib/prismadb";
-import { currentUser } from "@clerk/nextjs";
+import { auth } from "@/auth";
 import { PostType } from "@/components/ui/pet-card";
 
 export default async function Home({
@@ -10,8 +10,7 @@ export default async function Home({
 }: {
   searchParams: { city: string; state: string };
 }) {
-  console.log(searchParams)
-  const currentUsers = await currentUser();
+  const session = await auth();
   const localPosts = await db.pet.findMany({
     where: {
       city: searchParams.city,
@@ -20,7 +19,7 @@ export default async function Home({
   if(!searchParams?.city) return null
   return (
     <main className="flex min-h-screen flex-col items-center p-8 gap-y-2">
-      <div>Hola {currentUsers?.firstName}. Estas son las publicaciones de {searchParams.city}</div>
+      <div>Hola {session?.user?.name}. Estas son las publicaciones de {searchParams.city}</div>
       <div>
         
         <div className="flex flex-col p-8">

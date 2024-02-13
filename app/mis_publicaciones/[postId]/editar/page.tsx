@@ -7,7 +7,7 @@ export default async function EditPetPage({params}: {params: {postId: string}}) 
             id: params.postId
         }
     }) as PostType
-  
+   
   return (
     <PetForm initialData={pet} />
   )

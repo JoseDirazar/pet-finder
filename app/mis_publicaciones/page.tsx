@@ -1,5 +1,5 @@
 import db from "@/lib/prismadb";
-import { currentUser } from "@clerk/nextjs";
+import { auth } from "@/auth";
 import Link from "next/link";
 
 import Image from "next/image";
@@ -11,17 +11,11 @@ import { JsonArray, JsonValue } from "@prisma/client/runtime/library";
 
 
 export default async function Page({searchParams}: {searchParams: {city: string, state: string}}) {
-  const user = await currentUser();
-
-  const userDb = await db.user.findUnique({
-    where: {
-      userId: user?.id,
-    },
-  });
+  const session = await auth()
 
   const posts = await db.pet.findMany({
     where: {
-      userId: userDb?.id,
+      userId: session?.user?.id,
     },
   }) as PostType[];
 

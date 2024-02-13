@@ -4,8 +4,9 @@ import { motion, sync, useCycle } from "framer-motion";
 import { useDimensions } from "./useDimentions";
 import { MenuToggle } from "./menu-toggle";
 import { Navigation } from "./navigation";
-import { useAuth } from "@clerk/nextjs";
+
 import styles from './nav.module.css'
+import { Session } from "next-auth";
 
 const sidebar = {
   open: (height = 1000) => ({
@@ -27,7 +28,7 @@ const sidebar = {
   }
 };
 
-export const Example = () => {
+export const Example = ({session}: {session: Session | null}) => {
 
   const [isOpen, toggleOpen] = useCycle(false, true);
   const containerRef = useRef(null);
@@ -42,7 +43,7 @@ export const Example = () => {
       className={styles.nav}
     >
       <motion.div className={styles.background} variants={sidebar} />
-      <Navigation toggle={() => toggleOpen()} />
+      <Navigation toggle={() => toggleOpen()} session={session} />
       <MenuToggle toggle={() => toggleOpen()} />
     </motion.nav>
   );
